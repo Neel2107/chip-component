@@ -31,8 +31,8 @@ export const usersData = [
     },
     {
       id: 6,
-      name: "Nick Giannnopoulos",
-      email: "n.giannopoulos@example.com",
+      name: "Nick2 Giannnopoulos",
+      email: "n2.giannopoulos@example.com",
       icon: "/icons/user-6.png"
     },
   ];
