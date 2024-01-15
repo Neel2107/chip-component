@@ -11,16 +11,16 @@ const ChipComponent = () => {
   const [suggestionBoxStyle, setSuggestionBoxStyle] = useState({});
 
   const wrapperRef = useRef(null);
-  const inputRef = useRef(null); // New ref for the input box
+  const inputRef = useRef(null); 
 
   const handleKeyDown = (e) => {
     if (e.key === "Backspace" && inputValue === "") {
       if (highlightedChip !== null) {
-        // Delete the highlighted chip
+    
         handleRemoveChip(highlightedChip);
-        setHighlightedChip(null); // Reset highlighted chip
+        setHighlightedChip(null); 
       } else if (chips.length > 0) {
-        // Highlight the last chip
+     
         setHighlightedChip(chips[chips.length - 1]);
       }
     }
@@ -29,7 +29,7 @@ const ChipComponent = () => {
   const handleInputChange = (e) => {
     let value = e.target.value;
     if (value.startsWith(' ')) {
-      value = value.replace(/^\s/, ''); // Removes the first whitespace character
+      value = value.replace(/^\s/, ''); 
     }
     setInputValue(value);
     if (e.target.value.length > 0) {
@@ -43,16 +43,14 @@ const ChipComponent = () => {
 
   const handleInputClick = () => {
     console.log("ajksdfgashdfgkashjdfgaksdjfhgajks")
-    // Show suggestions when input is clicked
    
-       // Check if all usersData items are already added as chips
   const allAdded = usersData.every(user => chips.some(chip => chip.email === user.email));
 
   if (!allAdded) {
-    setFilteredData(usersData); // Set filteredData only if not all items are added
+    setFilteredData(usersData); 
   } else {
-    // Optionally, you could clear filteredData or take some other action
-    setFilteredData([]); // or any other appropriate action
+   
+    setFilteredData([]); 
   }
       setInputValue(" ")
    
@@ -61,7 +59,7 @@ const ChipComponent = () => {
   const handleItemClick = (item) => {
     if (!chips.some((chip) => chip.email === item.email)) {
       setChips([...chips, item]);
-      // Update filteredData to exclude the added chip
+     
       setFilteredData(
         filteredData.filter((filteredItem) => filteredItem.email !== item.email)
       );
@@ -70,24 +68,24 @@ const ChipComponent = () => {
 
   const handleRemoveChip = (chip) => {
     setChips(chips.filter((c) => c.email !== chip.email));
-    // Add back the removed chip into filteredData
+   
     setFilteredData(
       [...filteredData, chip].sort((a, b) => a.name.localeCompare(b.name))
-    ); // Assuming you want to sort them by name
+    ); 
   };
 
   useEffect(() => {
     function handleClickOutside(event) {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-        setInputValue(""); // Clear the input field
-        setFilteredData(usersData); // Reset the filtered data to include all users
+        setInputValue(""); 
+        setFilteredData(usersData); 
       }
     }
 
-    // Bind the event listener
+    
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      // Unbind the event listener on clean up
+     
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [wrapperRef]);
@@ -97,8 +95,8 @@ const ChipComponent = () => {
       if (inputRef.current) {
         const { bottom, left } = inputRef.current.getBoundingClientRect();
         let totalChipsWidth = 0;
-        // Calculate the total width of chips
-        const chipsElements = wrapperRef.current.querySelectorAll(".chip"); // Assuming .chip is the class for chip divs
+        
+        const chipsElements = wrapperRef.current.querySelectorAll(".chip"); 
         chipsElements.forEach((chip) => {
           totalChipsWidth +=
             chip.offsetWidth +
@@ -107,23 +105,22 @@ const ChipComponent = () => {
         setSuggestionBoxStyle({
           position: "absolute",
           top: `${bottom}px`,
-          left: `${left + totalChipsWidth}px`, // Adjust left position by total chips width
+          left: `${left + totalChipsWidth}px`,
         });
       }
     };
 
-    // Call the function to calculate position
+    
     calculateSuggestionBoxPosition();
 
-    // Re-calculate when chips are added/removed
+    
     window.addEventListener("resize", calculateSuggestionBoxPosition);
     return () => {
       window.removeEventListener("resize", calculateSuggestionBoxPosition);
     };
-  }, [chips, inputValue]); // Dependencies
+  }, [chips, inputValue]); 
 
-  // This useEffect will update the filteredData based on the current inputValue
-  // and make sure that the chips already selected are not included in it.
+  
   useEffect(() => {
     setFilteredData(
       usersData.filter(
@@ -174,15 +171,15 @@ const ChipComponent = () => {
           ))}
 
           <input
-            ref={inputRef} // Attach the ref to the input box
+            ref={inputRef} 
             type="text"
             className="text-start focus:outline-none"
-            onClick={handleInputClick} // Add onClick event handler
+            onClick={handleInputClick} 
 
             value={inputValue}
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
-            style={{ flexGrow: 1, flexBasis: "120px" }} // Ensuring the input has a base width and can grow
+            style={{ flexGrow: 1, flexBasis: "120px" }} 
           />
         </div>
         {inputValue && filteredData.length > 0 && (
