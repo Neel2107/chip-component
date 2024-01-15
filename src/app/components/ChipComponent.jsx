@@ -8,8 +8,10 @@ const ChipComponent = () => {
   const [chips, setChips] = useState([]);
   const [filteredData, setFilteredData] = useState(usersData);
   const [highlightedChip, setHighlightedChip] = useState(null);
+  const [suggestionBoxStyle, setSuggestionBoxStyle] = useState({});
 
   const wrapperRef = useRef(null);
+  const inputRef = useRef(null); // New ref for the input box
 
   const handleKeyDown = (e) => {
     if (e.key === "Backspace" && inputValue === "") {
@@ -63,6 +65,35 @@ const ChipComponent = () => {
     };
   }, [wrapperRef]);
 
+  useEffect(() => {
+    const calculateSuggestionBoxPosition = () => {
+      if (inputRef.current) {
+        const { bottom, left } = inputRef.current.getBoundingClientRect();
+        let totalChipsWidth = 0;
+        // Calculate the total width of chips
+        const chipsElements = wrapperRef.current.querySelectorAll('.chip'); // Assuming .chip is the class for chip divs
+        chipsElements.forEach((chip) => {
+          totalChipsWidth += chip.offsetWidth + parseInt(window.getComputedStyle(chip).marginRight);
+        });
+        setSuggestionBoxStyle({
+          position: "absolute",
+          top: `${bottom}px`,
+          left: `${left + totalChipsWidth}px`, // Adjust left position by total chips width
+        });
+      }
+    };
+  
+    // Call the function to calculate position
+    calculateSuggestionBoxPosition();
+  
+    // Re-calculate when chips are added/removed
+    window.addEventListener('resize', calculateSuggestionBoxPosition);
+    return () => {
+      window.removeEventListener('resize', calculateSuggestionBoxPosition);
+    };
+  }, [chips, inputValue]); // Dependencies
+  
+  
   return (
     <div className="flex flex-col justify-center items-center w-full h-screen">
       <div
@@ -100,6 +131,7 @@ const ChipComponent = () => {
           ))}
 
           <input
+            ref={inputRef} // Attach the ref to the input box
             type="text"
             className="text-start focus:outline-none"
             value={inputValue}
@@ -109,7 +141,7 @@ const ChipComponent = () => {
           />
         </div>
         {inputValue && filteredData.length > 0 && (
-          <div className="absolute mt-12 w-2/3  bg-white border border-gray-300 rounded-md shdow-lg">
+          <div className="absolute mt-12 w-auto  bg-white border border-gray-300 rounded-md shdow-lg" style={suggestionBoxStyle}>
             {filteredData.map((item, index) => (
               <div
                 key={index}
