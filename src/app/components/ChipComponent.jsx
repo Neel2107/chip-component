@@ -27,13 +27,26 @@ const ChipComponent = () => {
   };
 
   const handleInputChange = (e) => {
-    const value = e.target.value;
+    let value = e.target.value;
+    value = value.trimStart(); // This will remove all leading whitespace
     setInputValue(value);
-    setFilteredData(
-      usersData.filter((item) =>
-        item.name.toLowerCase().includes(value.toLowerCase())
-      )
-    );
+    if (e.target.value.length > 0) {
+      setFilteredData(
+        usersData.filter((item) =>
+          item.name.toLowerCase().includes(value.toLowerCase())
+        )
+      );
+    }
+  };
+
+  const handleInputClick = () => {
+    console.log("ajksdfgashdfgkashjdfgaksdjfhgajks")
+    // Show suggestions when input is clicked
+   
+      setFilteredData(usersData);
+      console.log("filteredData", filteredData)
+      setInputValue(" ")
+   
   };
 
   const handleItemClick = (item) => {
@@ -155,6 +168,8 @@ const ChipComponent = () => {
             ref={inputRef} // Attach the ref to the input box
             type="text"
             className="text-start focus:outline-none"
+            onClick={handleInputClick} // Add onClick event handler
+
             value={inputValue}
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
