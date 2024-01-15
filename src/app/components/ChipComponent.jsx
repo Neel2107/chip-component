@@ -9,8 +9,24 @@ const ChipComponent = () => {
   const [inputValue, setInputValue] = useState('');
   const [chips, setChips] = useState([]);
   const [filteredData, setFilteredData] = useState(usersData);
+  const [highlightedChip, setHighlightedChip] = useState(null);
 
   const wrapperRef = useRef(null);
+
+
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Backspace' && inputValue === '') {
+      if (highlightedChip !== null) {
+        // Delete the highlighted chip
+        handleRemoveChip(highlightedChip);
+        setHighlightedChip(null); // Reset highlighted chip
+      } else if (chips.length > 0) {
+        // Highlight the last chip
+        setHighlightedChip(chips[chips.length - 1]);
+      }
+    }
+  };
 
 
   
@@ -27,15 +43,13 @@ const ChipComponent = () => {
 
   const handleRemoveChip = (chip) => {
     setChips(chips.filter(c => c !== chip));
+    if (highlightedChip === chip) {
+      setHighlightedChip(null);
+    }
     setFilteredData([...filteredData, chip]);
   };
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Backspace' && inputValue === '' && chips.length > 0) {
-      const lastChip = chips[chips.length - 1];
-      handleRemoveChip(lastChip);
-    }
-  };
+ 
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -61,7 +75,8 @@ const ChipComponent = () => {
     <div ref={wrapperRef} className="flex flex-wrap gap-2 border border-zinc-400 h-auto w-2/3 rounded-md shadow-lg p-3">
       <div className="flex flex-wrap flex-grow">
         {chips.map((chip, index) => (
-          <div key={index} className="flex items-center border border-gray-300 rounded-full px-2 py-1 bg-zinc-200/50 m-1">
+               <div key={index} className={`flex items-center border border-gray-300 rounded-full px-2 py-1 m-1 ${chip === highlightedChip ? 'bg-red-200' : 'bg-zinc-200/50'}`}>
+
             <Image src={chip.icon} alt="user" height={25} width={25} className="w-8 h-8 mr-2" />
             <div className="flex flex-col">
               <span>{chip.name}</span>
