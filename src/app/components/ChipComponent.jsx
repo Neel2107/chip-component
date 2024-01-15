@@ -37,17 +37,21 @@ const ChipComponent = () => {
   };
 
   const handleItemClick = (item) => {
-    if (!chips.some(chip => chip.email === item.email)) {
+    if (!chips.some((chip) => chip.email === item.email)) {
       setChips([...chips, item]);
       // Update filteredData to exclude the added chip
-      setFilteredData(filteredData.filter(filteredItem => filteredItem.email !== item.email));
+      setFilteredData(
+        filteredData.filter((filteredItem) => filteredItem.email !== item.email)
+      );
     }
   };
 
   const handleRemoveChip = (chip) => {
-    setChips(chips.filter(c => c.email !== chip.email));
+    setChips(chips.filter((c) => c.email !== chip.email));
     // Add back the removed chip into filteredData
-    setFilteredData([...filteredData, chip].sort((a, b) => a.name.localeCompare(b.name))); // Assuming you want to sort them by name
+    setFilteredData(
+      [...filteredData, chip].sort((a, b) => a.name.localeCompare(b.name))
+    ); // Assuming you want to sort them by name
   };
 
   useEffect(() => {
@@ -72,9 +76,11 @@ const ChipComponent = () => {
         const { bottom, left } = inputRef.current.getBoundingClientRect();
         let totalChipsWidth = 0;
         // Calculate the total width of chips
-        const chipsElements = wrapperRef.current.querySelectorAll('.chip'); // Assuming .chip is the class for chip divs
+        const chipsElements = wrapperRef.current.querySelectorAll(".chip"); // Assuming .chip is the class for chip divs
         chipsElements.forEach((chip) => {
-          totalChipsWidth += chip.offsetWidth + parseInt(window.getComputedStyle(chip).marginRight);
+          totalChipsWidth +=
+            chip.offsetWidth +
+            parseInt(window.getComputedStyle(chip).marginRight);
         });
         setSuggestionBoxStyle({
           position: "absolute",
@@ -83,34 +89,37 @@ const ChipComponent = () => {
         });
       }
     };
-  
+
     // Call the function to calculate position
     calculateSuggestionBoxPosition();
-  
+
     // Re-calculate when chips are added/removed
-    window.addEventListener('resize', calculateSuggestionBoxPosition);
+    window.addEventListener("resize", calculateSuggestionBoxPosition);
     return () => {
-      window.removeEventListener('resize', calculateSuggestionBoxPosition);
+      window.removeEventListener("resize", calculateSuggestionBoxPosition);
     };
   }, [chips, inputValue]); // Dependencies
-  
+
   // This useEffect will update the filteredData based on the current inputValue
   // and make sure that the chips already selected are not included in it.
   useEffect(() => {
     setFilteredData(
-      usersData.filter(user =>
-        !chips.some(chip => chip.email === user.email) &&
-        user.name.toLowerCase().includes
-(inputValue.toLowerCase())
-)
-);
-}, [chips, inputValue]);
+      usersData.filter(
+        (user) =>
+          !chips.some((chip) => chip.email === user.email) &&
+          user.name.toLowerCase().includes(inputValue.toLowerCase())
+      )
+    );
+  }, [chips, inputValue]);
 
   return (
-    <div className="flex flex-col justify-center items-center w-full h-screen">
+    <div className="flex flex-col  items-center w-full h-screen">
+      <div className="mt-20 mb-10">
+        <h1 className="text-3xl font-semibold">Chip Component</h1>
+      </div>
       <div
         ref={wrapperRef}
-        className="flex flex-wrap gap-2 border border-zinc-400 h-auto min-h-20 w-2/3 rounded-md shadow-lg p-3"
+        className="flex flex-wrap  gap-2 border border-zinc-400 h-auto min-h-20 w-2/3 rounded-md shadow-lg p-3"
       >
         <div className="flex flex-wrap flex-grow">
           {chips.map((chip, index) => (
@@ -153,7 +162,10 @@ const ChipComponent = () => {
           />
         </div>
         {inputValue && filteredData.length > 0 && (
-          <div className="absolute mt-6 w-auto  bg-white border border-gray-300 rounded-md shdow-lg" style={suggestionBoxStyle}>
+          <div
+            className="absolute mt-6 w-auto  bg-white border border-gray-300 rounded-md shdow-lg"
+            style={suggestionBoxStyle}
+          >
             {filteredData.map((item, index) => (
               <div
                 key={index}
