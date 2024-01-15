@@ -28,7 +28,9 @@ const ChipComponent = () => {
 
   const handleInputChange = (e) => {
     let value = e.target.value;
-    value = value.trimStart(); // This will remove all leading whitespace
+    if (value.startsWith(' ')) {
+      value = value.replace(/^\s/, ''); // Removes the first whitespace character
+    }
     setInputValue(value);
     if (e.target.value.length > 0) {
       setFilteredData(
@@ -43,8 +45,15 @@ const ChipComponent = () => {
     console.log("ajksdfgashdfgkashjdfgaksdjfhgajks")
     // Show suggestions when input is clicked
    
-      setFilteredData(usersData);
-      console.log("filteredData", filteredData)
+       // Check if all usersData items are already added as chips
+  const allAdded = usersData.every(user => chips.some(chip => chip.email === user.email));
+
+  if (!allAdded) {
+    setFilteredData(usersData); // Set filteredData only if not all items are added
+  } else {
+    // Optionally, you could clear filteredData or take some other action
+    setFilteredData([]); // or any other appropriate action
+  }
       setInputValue(" ")
    
   };
