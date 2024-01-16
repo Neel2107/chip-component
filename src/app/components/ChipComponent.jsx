@@ -11,16 +11,14 @@ const ChipComponent = () => {
   const [suggestionBoxStyle, setSuggestionBoxStyle] = useState({});
 
   const wrapperRef = useRef(null);
-  const inputRef = useRef(null); 
+  const inputRef = useRef(null);
 
   const handleKeyDown = (e) => {
     if (e.key === "Backspace" && inputValue === "") {
       if (highlightedChip !== null) {
-    
         handleRemoveChip(highlightedChip);
-        setHighlightedChip(null); 
+        setHighlightedChip(null);
       } else if (chips.length > 0) {
-     
         setHighlightedChip(chips[chips.length - 1]);
       }
     }
@@ -28,8 +26,8 @@ const ChipComponent = () => {
 
   const handleInputChange = (e) => {
     let value = e.target.value;
-    if (value.startsWith(' ')) {
-      value = value.replace(/^\s/, ''); 
+    if (value.startsWith(" ")) {
+      value = value.replace(/^\s/, "");
     }
     setInputValue(value);
     if (e.target.value.length > 0) {
@@ -42,24 +40,21 @@ const ChipComponent = () => {
   };
 
   const handleInputClick = () => {
-    console.log("ajksdfgashdfgkashjdfgaksdjfhgajks")
-   
-  const allAdded = usersData.every(user => chips.some(chip => chip.email === user.email));
-
-  if (!allAdded) {
-    setFilteredData(usersData); 
-  } else {
-   
-    setFilteredData([]); 
-  }
-      setInputValue(" ")
-   
+    const allAdded = usersData.every((user) =>
+      chips.some((chip) => chip.email === user.email)
+    );
+    if (!allAdded) {
+      setFilteredData(usersData);
+    } else {
+      setFilteredData([]);
+    }
+    setInputValue(" ");
   };
 
   const handleItemClick = (item) => {
     if (!chips.some((chip) => chip.email === item.email)) {
       setChips([...chips, item]);
-     
+
       setFilteredData(
         filteredData.filter((filteredItem) => filteredItem.email !== item.email)
       );
@@ -68,24 +63,22 @@ const ChipComponent = () => {
 
   const handleRemoveChip = (chip) => {
     setChips(chips.filter((c) => c.email !== chip.email));
-   
+
     setFilteredData(
       [...filteredData, chip].sort((a, b) => a.name.localeCompare(b.name))
-    ); 
+    );
   };
 
   useEffect(() => {
     function handleClickOutside(event) {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-        setInputValue(""); 
-        setFilteredData(usersData); 
+        setInputValue("");
+        setFilteredData(usersData);
       }
     }
 
-    
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
-     
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [wrapperRef]);
@@ -95,8 +88,8 @@ const ChipComponent = () => {
       if (inputRef.current) {
         const { bottom, left } = inputRef.current.getBoundingClientRect();
         let totalChipsWidth = 0;
-        
-        const chipsElements = wrapperRef.current.querySelectorAll(".chip"); 
+
+        const chipsElements = wrapperRef.current.querySelectorAll(".chip");
         chipsElements.forEach((chip) => {
           totalChipsWidth +=
             chip.offsetWidth +
@@ -110,17 +103,14 @@ const ChipComponent = () => {
       }
     };
 
-    
     calculateSuggestionBoxPosition();
 
-    
     window.addEventListener("resize", calculateSuggestionBoxPosition);
     return () => {
       window.removeEventListener("resize", calculateSuggestionBoxPosition);
     };
-  }, [chips, inputValue]); 
+  }, [chips, inputValue]);
 
-  
   useEffect(() => {
     setFilteredData(
       usersData.filter(
@@ -138,7 +128,7 @@ const ChipComponent = () => {
       </div>
       <div
         ref={wrapperRef}
-        className="flex flex-wrap  gap-2 border border-zinc-400 h-auto min-h-20 w-2/3 rounded-md shadow-lg p-3"
+        className="flex flex-wrap  gap-2 border border-zinc-400 h-auto min-h-20 w-2/3 rounded-lg shadow-lg p-3"
       >
         <div className="flex flex-wrap flex-grow">
           {chips.map((chip, index) => (
@@ -171,15 +161,14 @@ const ChipComponent = () => {
           ))}
 
           <input
-            ref={inputRef} 
+            ref={inputRef}
             type="text"
             className="text-start focus:outline-none"
-            onClick={handleInputClick} 
-
+            onClick={handleInputClick}
             value={inputValue}
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
-            style={{ flexGrow: 1, flexBasis: "120px" }} 
+            style={{ flexGrow: 1, flexBasis: "120px" }}
           />
         </div>
         {inputValue && filteredData.length > 0 && (
